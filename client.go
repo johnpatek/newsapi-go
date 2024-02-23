@@ -279,6 +279,7 @@ func GetEverything(apiKey string, params EverythingParameters) (*EverythingRespo
 	return response, nil
 }
 
+// GetTopHeadlines requests the /top-headlines endpoint to retrieve trending articles that match a specific criteria
 func GetTopHeadlines(apiKey string, params TopHeadlinesParameters) (*TopHeadlinesResponse, error) {
 	response, err := request[TopHeadlinesResponse](apiKey, topHeadlinesEndpoint, params)
 	if err != nil {
@@ -287,6 +288,7 @@ func GetTopHeadlines(apiKey string, params TopHeadlinesParameters) (*TopHeadline
 	return response, nil
 }
 
+// GetSources requests the /top-headlines/sources endpoint to retrieve information for a subset of news outlet
 func GetSources(apiKey string, params SourcesParameters) (*SourcesResponse, error) {
 	response, err := request[SourcesResponse](apiKey, sourcesEndpoint, params)
 	if err != nil {
