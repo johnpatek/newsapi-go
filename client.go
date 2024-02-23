@@ -208,18 +208,21 @@ type SourcesParameters struct {
 	Country  CountryType
 }
 
+// EverythingResponse returns information from calls to the /everything endpoint
 type EverythingResponse struct {
 	Status       string    `json:"status"`
 	TotalResults int       `json:"totalResults"`
 	Articles     []Article `json:"Articles"`
 }
 
+// TopHeadlinesResponse returns information from calls to the /top-headlines endpoint
 type TopHeadlinesResponse struct {
 	Status       string    `json:"status"`
 	TotalResults int       `json:"totalResults"`
 	Articles     []Article `json:"Articles"`
 }
 
+// SourcesResponse returns information from calls to the /top-headlines/sources endpoint
 type SourcesResponse struct {
 	Status  string   `json:"status"`
 	Sources []Source `json:"sources"`
