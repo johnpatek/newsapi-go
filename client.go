@@ -136,11 +136,12 @@ const (
 	Popularity    SortByType = "popularity"
 	PublishedAt   SortByType = "publishedAt"
 
-	rootURI              string = "https://newsapi.org/v2"
 	everythingEndpoint   string = "/everything"
 	topHeadlinesEndpoint string = "/top-headlines"
 	sourcesEndpoint      string = "/top-headlines/sources"
 )
+
+var rootURI string = "https://newsapi.org/v2"
 
 // ArticleSource contains the identifier id and a display name for the source an article came from.
 type ArticleSource struct {
@@ -232,75 +233,36 @@ type ErrorResponse struct {
 
 func (params EverythingParameters) toString() string {
 	values := url.Values{}
-
 	setQ(&values, params.Q)
 	setSearchIn(&values, params.SearchIn)
-
-	if len(params.Sources) > 0 {
-		sources := strings.Join(params.Sources, ",")
-		values.Add("sources", sources)
-	}
-
+	setSources(&values, params.Sources)
 	setDomains(&values, params.Domains)
 	setExcludeDomains(&values, params.ExcludeDomains)
 	setFrom(&values, params.From)
-
-	if !params.To.IsZero() {
-		values.Add("to", params.To.Format(time.RFC3339))
-	}
-
+	setTo(&values, params.To)
 	setLanguage(&values, params.Language)
-
-	if params.SortBy != SortByDefault {
-		values.Add("sortBy", fmt.Sprintf("%v", params.SortBy))
-	}
-
+	setSortBy(&values, params.SortBy)
 	setPageSize(&values, params.PageSize)
 	setPage(&values, params.Page)
-
 	return values.Encode()
 }
 
 func (params TopHeadlinesParameters) toString() string {
 	values := url.Values{}
-
 	setCountry(&values, params.Country)
-
 	setCategory(&values, params.Category)
-
-	if len(params.Sources) > 0 {
-		sources := strings.Join(params.Sources, ",")
-		values.Add("sources", sources)
-	}
-
+	setSources(&values, params.Sources)
 	setQ(&values, params.Q)
-
-	if params.PageSize != 0 {
-		values.Add("pageSize", fmt.Sprintf("%d", params.PageSize))
-	}
-
-	if params.Page != 0 {
-		values.Add("page", fmt.Sprintf("%d", params.Page))
-	}
-
+	setPageSize(&values, params.PageSize)
+	setPage(&values, params.Page)
 	return values.Encode()
 }
 
 func (params SourcesParameters) toString() string {
 	values := url.Values{}
-
-	if params.Category != AllCategories {
-		values.Add("category", fmt.Sprintf("%v", params.Category))
-	}
-
-	if params.Language != AllLanguages {
-		values.Add("language", fmt.Sprintf("%v", params.Language))
-	}
-
-	if params.Country != AllCountries {
-		values.Add("country", fmt.Sprintf("%v", params.Country))
-	}
-
+	setCategory(&values, params.Category)
+	setLanguage(&values, params.Language)
+	setCountry(&values, params.Country)
 	return values.Encode()
 }
 
@@ -419,5 +381,23 @@ func setQ(values *url.Values, q string) {
 func setSearchIn(values *url.Values, searchIn SearchInType) {
 	if searchIn != SearchInDefault {
 		values.Add("searchIn", fmt.Sprintf("%v", searchIn))
+	}
+}
+
+func setSortBy(values *url.Values, sortBy SortByType) {
+	if sortBy != SortByDefault {
+		values.Add("sortBy", fmt.Sprintf("%v", sortBy))
+	}
+}
+
+func setSources(values *url.Values, sources []string) {
+	if len(sources) > 0 {
+		values.Add("sources", strings.Join(sources, ","))
+	}
+}
+
+func setTo(values *url.Values, to time.Time) {
+	if !to.IsZero() {
+		values.Add("to", to.Format(time.RFC3339))
 	}
 }

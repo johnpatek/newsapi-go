@@ -21,9 +21,11 @@
 package newsapi
 
 import (
+	"errors"
 	"net/url"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,6 +33,8 @@ import (
 const (
 	// this key will return an error from the API
 	invalidKey string = "00000000000000000000000000000000"
+
+	invalidRootURI string = "invalidrooturi"
 )
 
 var validKey string = os.Getenv("NEWS_API_KEY")
@@ -42,6 +46,50 @@ func TestParams(t *testing.T) {
 
 	values = url.Values{}
 	setCountry(&values, Japan)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setDomains(&values, []string{"espn.com", "clickhole.com"})
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setExcludeDomains(&values, []string{"espn.com", "clickhole.com"})
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setFrom(&values, time.Now())
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setLanguage(&values, Swedish)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setPage(&values, 3)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setPageSize(&values, 2)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setQ(&values, "golang")
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setSearchIn(&values, Title)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setSortBy(&values, Popularity)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setSources(&values, []string{"abc-news", "abc-news-au"})
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setTo(&values, time.Now())
 	assert.NotEmpty(t, values.Encode())
 }
 
@@ -70,8 +118,23 @@ func TestGetSources(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestQuery(t *testing.T) {
-	values := new(url.Values)
-	queryString := values.Encode()
-	assert.Empty(t, queryString)
+type invalidResponseType struct {
+	Channel chan int `json:"invalid"`
+}
+
+func (invalid *invalidResponseType) UnmarshalJSON(data []byte) error {
+	return errors.New("unmarshal error")
+}
+
+func TestBadRequest(t *testing.T) {
+	response, err := request[invalidResponseType](validKey, everythingEndpoint, EverythingParameters{
+		Q: "golang",
+	})
+	assert.Nil(t, response)
+	assert.Error(t, err)
+	rootURI = invalidRootURI
+	_, err = request[EverythingResponse](validKey, everythingEndpoint, EverythingParameters{
+		Q: "golang",
+	})
+	assert.Error(t, err)
 }
