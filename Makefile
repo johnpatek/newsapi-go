@@ -16,11 +16,6 @@ unit:
 cover:
 	@echo $(CODE_COVERAGE_HEADER)
 	@go tool cover -func=coverage.out
-	
-.PHONY: integration
-integration:
-	@echo $(INTEGRATION_TEST_HEADER)
-	@go test -v -run TestFileKV
 
 .PHONY: lint
 lint:
@@ -28,7 +23,7 @@ lint:
 	@if [ ! -f bin/golangci-lint ]; then \
     	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b bin; \
 	fi
-	@./bin/golangci-lint -v run filekv.go
+	@./bin/golangci-lint -v run ./...
 
 .PHONY: clean
 clean:
