@@ -1,12 +1,3 @@
-# NewsAPI Go Client
-
-Go client package for [NewsAPI](https://newsapi.org).
-
-## Usage
-
-The following [example](_example/main.go) demonstrates basic usage.
-
-```go
 package main
 
 import (
@@ -37,10 +28,3 @@ func main() {
 		fmt.Printf("Usage: example <API KEY>")
 	}
 }
-```
-
-This example can be built and run using the following commands:
-```bash
-make build
-./bin/example <your API key>
-```

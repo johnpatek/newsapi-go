@@ -2,7 +2,11 @@ UNIT_TEST_HEADER        = "****************************** UNIT TEST ************
 LINT_TEST_HEADER        = "****************************** LINT TEST *******************************"
 CODE_COVERAGE_HEADER    = "**************************** CODE COVERAGE *****************************" 
 .PHONY: all
-all: test lint
+all: build test lint
+
+.PHONY: build
+build:
+	go build -o bin/example _example/main.go
 
 .PHONY: test
 test: unit cover
