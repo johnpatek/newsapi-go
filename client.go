@@ -9,14 +9,19 @@ import (
 	"time"
 )
 
+// The fields to search for keywords and phrases.
 type SearchInType string
 
+// The category to get headlines for. Cannot be mixed with Sources parameter.
 type CategoryType string
 
+// The 2-letter ISO-639-1 code of languages to get headlines for.
 type LanguageType string
 
+// The 2-letter ISO 3166-1 code of countries to get headlines for.
 type CountryType string
 
+// The order to sort the articles in.
 type SortByType string
 
 const (
@@ -117,11 +122,13 @@ const (
 	sourcesEndpoint      string = "/top-headlines/sources"
 )
 
+// ArticleSource contains the identifier id and a display name for the source an article came from.
 type ArticleSource struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
+// Article represents an entry in the list of results from a search
 type Article struct {
 	Source      ArticleSource `json:"source"`
 	Author      string        `json:"author"`
@@ -133,6 +140,7 @@ type Article struct {
 	Content     string        `json:"content"`
 }
 
+// Source contains information for a single news publisher
 type Source struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -143,10 +151,11 @@ type Source struct {
 	Country     string `json:"country"`
 }
 
-type Parameters interface {
+type parameters interface {
 	toString() string
 }
 
+// EverythingParameters provides a URL query for the /everything endpoint
 type EverythingParameters struct {
 	Q              string
 	SearchIn       SearchInType
@@ -161,6 +170,7 @@ type EverythingParameters struct {
 	Page           int
 }
 
+// TopHeadlinesParameters provides a URL query for the /top-headlines endpoint
 type TopHeadlinesParameters struct {
 	Country  CountryType
 	Category CategoryType
@@ -170,6 +180,7 @@ type TopHeadlinesParameters struct {
 	Page     int
 }
 
+// SourcesParameters provides a URL query for the /top-headlines/sources endpoint
 type SourcesParameters struct {
 	Category CategoryType
 	Language LanguageType
@@ -316,7 +327,7 @@ func GetSources(apiKey string, params SourcesParameters) (*SourcesResponse, erro
 	return response, nil
 }
 
-func request[ResponseType any](apiKey, endpoint string, params Parameters) (*ResponseType, error) {
+func request[ResponseType any](apiKey, endpoint string, params parameters) (*ResponseType, error) {
 	responseBody := new(ResponseType)
 
 	paramsString := ""
