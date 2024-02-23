@@ -143,6 +143,33 @@ const (
 
 var rootURI string = "https://newsapi.org/v2"
 
+// GetEverything requests the /everything endpoint to retrieve entries that match a specific criteria
+func GetEverything(apiKey string, params EverythingParameters) (*EverythingResponse, error) {
+	response, err := request[EverythingResponse](apiKey, everythingEndpoint, params)
+	if err != nil {
+		return nil, fmt.Errorf("newsapi.GetEverything: %v", err)
+	}
+	return response, nil
+}
+
+// GetTopHeadlines requests the /top-headlines endpoint to retrieve trending articles that match a specific criteria
+func GetTopHeadlines(apiKey string, params TopHeadlinesParameters) (*TopHeadlinesResponse, error) {
+	response, err := request[TopHeadlinesResponse](apiKey, topHeadlinesEndpoint, params)
+	if err != nil {
+		return nil, fmt.Errorf("newsapi.GetTopHeadlines: %v", err)
+	}
+	return response, nil
+}
+
+// GetSources requests the /top-headlines/sources endpoint to retrieve information for a subset of news outlet
+func GetSources(apiKey string, params SourcesParameters) (*SourcesResponse, error) {
+	response, err := request[SourcesResponse](apiKey, sourcesEndpoint, params)
+	if err != nil {
+		return nil, fmt.Errorf("newsapi.GetSources: %v", err)
+	}
+	return response, nil
+}
+
 // ArticleSource contains the identifier id and a display name for the source an article came from.
 type ArticleSource struct {
 	ID   string `json:"id"`
@@ -268,33 +295,6 @@ func (params SourcesParameters) toString() string {
 	setLanguage(&values, params.Language)
 	setCountry(&values, params.Country)
 	return values.Encode()
-}
-
-// GetEverything requests the /everything endpoint to retrieve entries that match a specific criteria
-func GetEverything(apiKey string, params EverythingParameters) (*EverythingResponse, error) {
-	response, err := request[EverythingResponse](apiKey, everythingEndpoint, params)
-	if err != nil {
-		return nil, fmt.Errorf("newsapi.GetEverything: %v", err)
-	}
-	return response, nil
-}
-
-// GetTopHeadlines requests the /top-headlines endpoint to retrieve trending articles that match a specific criteria
-func GetTopHeadlines(apiKey string, params TopHeadlinesParameters) (*TopHeadlinesResponse, error) {
-	response, err := request[TopHeadlinesResponse](apiKey, topHeadlinesEndpoint, params)
-	if err != nil {
-		return nil, fmt.Errorf("newsapi.GetTopHeadlines: %v", err)
-	}
-	return response, nil
-}
-
-// GetSources requests the /top-headlines/sources endpoint to retrieve information for a subset of news outlet
-func GetSources(apiKey string, params SourcesParameters) (*SourcesResponse, error) {
-	response, err := request[SourcesResponse](apiKey, sourcesEndpoint, params)
-	if err != nil {
-		return nil, fmt.Errorf("newsapi.GetSources: %v", err)
-	}
-	return response, nil
 }
 
 func request[ResponseType any](apiKey, endpoint string, params parameters) (*ResponseType, error) {
