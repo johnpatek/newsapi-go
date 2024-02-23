@@ -1,5 +1,7 @@
 # NewsAPI Go Client
 
+[![codecov](https://codecov.io/gh/johnpatek/newsapi-go/branch/master/graph/badge.svg)](https://codecov.io/gh/johnpatek/newsapi-go)
+
 Go client package for [NewsAPI](https://newsapi.org).
 
 ## Usage
