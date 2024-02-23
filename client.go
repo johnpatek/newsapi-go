@@ -233,47 +233,30 @@ type ErrorResponse struct {
 func (params EverythingParameters) toString() string {
 	values := url.Values{}
 
-	if params.Q != "" {
-		values.Add("q", params.Q)
-	}
-
-	if params.SearchIn != SearchInDefault {
-		values.Add("searchIn", fmt.Sprintf("%v", params.SearchIn))
-	}
+	setQ(&values, params.Q)
+	setSearchIn(&values, params.SearchIn)
 
 	if len(params.Sources) > 0 {
 		sources := strings.Join(params.Sources, ",")
 		values.Add("sources", sources)
 	}
 
-	if len(params.Domains) > 0 {
-		domains := strings.Join(params.Domains, ",")
-		values.Add("domains", domains)
-	}
-
-	if !params.From.IsZero() {
-		values.Add("from", params.From.Format(time.RFC3339))
-	}
+	setDomains(&values, params.Domains)
+	setExcludeDomains(&values, params.ExcludeDomains)
+	setFrom(&values, params.From)
 
 	if !params.To.IsZero() {
 		values.Add("to", params.To.Format(time.RFC3339))
 	}
 
-	if params.Language != AllLanguages {
-		values.Add("language", fmt.Sprintf("%v", params.Language))
-	}
+	setLanguage(&values, params.Language)
 
 	if params.SortBy != SortByDefault {
 		values.Add("sortBy", fmt.Sprintf("%v", params.SortBy))
 	}
 
-	if params.PageSize != 0 {
-		values.Add("pageSize", fmt.Sprintf("%d", params.PageSize))
-	}
-
-	if params.Page != 0 {
-		values.Add("page", fmt.Sprintf("%d", params.Page))
-	}
+	setPageSize(&values, params.PageSize)
+	setPage(&values, params.Page)
 
 	return values.Encode()
 }
@@ -290,9 +273,7 @@ func (params TopHeadlinesParameters) toString() string {
 		values.Add("sources", sources)
 	}
 
-	if params.Q != "" {
-		values.Add("q", params.Q)
-	}
+	setQ(&values, params.Q)
 
 	if params.PageSize != 0 {
 		values.Add("pageSize", fmt.Sprintf("%d", params.PageSize))
@@ -390,5 +371,53 @@ func setCategory(values *url.Values, category CategoryType) {
 func setCountry(values *url.Values, country CountryType) {
 	if country != AllCountries {
 		values.Add("country", fmt.Sprintf("%v", country))
+	}
+}
+
+func setDomains(values *url.Values, domains []string) {
+	if len(domains) > 0 {
+		values.Add("domains", strings.Join(domains, ","))
+	}
+}
+
+func setExcludeDomains(values *url.Values, excludeDomains []string) {
+	if len(excludeDomains) > 0 {
+		values.Add("excludeDomains", strings.Join(excludeDomains, ","))
+	}
+}
+
+func setFrom(values *url.Values, from time.Time) {
+	if !from.IsZero() {
+		values.Add("from", from.Format(time.RFC3339))
+	}
+}
+
+func setLanguage(values *url.Values, language LanguageType) {
+	if language != AllLanguages {
+		values.Add("language", fmt.Sprintf("%v", language))
+	}
+}
+
+func setPage(values *url.Values, page int) {
+	if page != 0 {
+		values.Add("page", fmt.Sprintf("%d", page))
+	}
+}
+
+func setPageSize(values *url.Values, pageSize int) {
+	if pageSize != 0 {
+		values.Add("page", fmt.Sprintf("%d", pageSize))
+	}
+}
+
+func setQ(values *url.Values, q string) {
+	if q != "" {
+		values.Add("q", q)
+	}
+}
+
+func setSearchIn(values *url.Values, searchIn SearchInType) {
+	if searchIn != SearchInDefault {
+		values.Add("searchIn", fmt.Sprintf("%v", searchIn))
 	}
 }

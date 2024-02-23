@@ -35,6 +35,16 @@ const (
 
 var validKey string = os.Getenv("NEWS_API_KEY")
 
+func TestParams(t *testing.T) {
+	values := url.Values{}
+	setCategory(&values, Business)
+	assert.NotEmpty(t, values.Encode())
+
+	values = url.Values{}
+	setCountry(&values, Japan)
+	assert.NotEmpty(t, values.Encode())
+}
+
 func TestGetEverything(t *testing.T) {
 	_, err := GetEverything(invalidKey, EverythingParameters{})
 	assert.Error(t, err)
