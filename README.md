@@ -1,5 +1,7 @@
 # NewsAPI Go Client
 
+[![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](http://pkg.go.dev/github.com/johnpatek/newsapi-go)
+
 [![codecov](https://codecov.io/gh/johnpatek/newsapi-go/branch/master/graph/badge.svg)](https://codecov.io/gh/johnpatek/newsapi-go)
 
 Go client package for [NewsAPI](https://newsapi.org).

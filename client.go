@@ -323,6 +323,7 @@ func (params SourcesParameters) toString() string {
 	return values.Encode()
 }
 
+// GetEverything requests the /everything endpoint to retrieve entries that match a specific criteria
 func GetEverything(apiKey string, params EverythingParameters) (*EverythingResponse, error) {
 	response, err := request[EverythingResponse](apiKey, everythingEndpoint, params)
 	if err != nil {
